@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Param,
   Post,
   UploadedFile,
@@ -24,5 +25,12 @@ export class NoticeController {
     @Param('notice_id') id: number,
   ): Promise<NoticeFile> {
     return await this.noticeService.uploadFile(file.filename, id);
+  }
+
+  @Get('files/:notice_id')
+  public async getNoticeFiles(
+    @Param('notice_id') id: number,
+  ): Promise<NoticeFile[]> {
+    return await this.noticeService.getNoticeFiles(id);
   }
 }
