@@ -21,4 +21,11 @@ export class NoticeService {
 
     return noticeFiles;
   }
+
+  public async downloadFile(id: number): Promise<string> {
+    const noticeFile = await this.noticeFileRepository.findOne({ id });
+    if (!noticeFile) throw FileNotFoundException;
+
+    return noticeFile.path;
+  }
 }
