@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UploadedFile,
   UseGuards,
@@ -19,6 +20,7 @@ import { NoticeFile } from './entity/notice-file.entity';
 import { NoticeService } from './notice.service';
 import mime, { getType } from 'mime';
 import { decode, encode } from 'iconv-lite';
+import { UpdateResult } from 'typeorm';
 
 @Controller('notice')
 export class NoticeController {
@@ -62,5 +64,15 @@ export class NoticeController {
 
     let filestream = createReadStream(filepath);
     filestream.pipe(res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('noticeFile', MulterConfigs))
+  @Put(':file_id')
+  public async modifyFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('file_id') id: number,
+  ): Promise<NoticeFile> {
+    return await this.noticeService.modifyFile(file.filename, id);
   }
 }
