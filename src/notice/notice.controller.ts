@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -20,7 +21,7 @@ import { NoticeFile } from './entity/notice-file.entity';
 import { NoticeService } from './notice.service';
 import mime, { getType } from 'mime';
 import { decode, encode } from 'iconv-lite';
-import { UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('notice')
 export class NoticeController {
@@ -74,5 +75,10 @@ export class NoticeController {
     @Param('file_id') id: number,
   ): Promise<NoticeFile> {
     return await this.noticeService.modifyFile(file.filename, id);
+  }
+
+  @Delete(':file_id')
+  public async deleteFile(@Param('file_id') id: number): Promise<DeleteResult> {
+    return await this.noticeService.deleteFile(id);
   }
 }

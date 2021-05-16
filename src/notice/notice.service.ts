@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileNotFoundException } from 'src/common/exception/exception.index';
-import { UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { NoticeFile } from './entity/notice-file.entity';
 import { NoticeFileRepository } from './entity/notice-file.repository';
 
@@ -32,6 +32,11 @@ export class NoticeService {
   public async modifyFile(filename: string, id: number): Promise<NoticeFile> {
     const noticeFile = await this.isExistFile(id);
     return await this.noticeFileRepository.modifyFile(filename, noticeFile);
+  }
+
+  public async deleteFile(id: number): Promise<DeleteResult> {
+    const noticeFile = await this.isExistFile(id);
+    return await this.noticeFileRepository.delete(noticeFile);
   }
 
   private async isExistFile(id: number): Promise<NoticeFile> {
