@@ -4,7 +4,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpErrorFilter } from './common/exception/exception.filter';
-import { JwtStrategy } from './common/strategy/jwt.strategy';
+import { AdminJwtStrategy, JwtStrategy } from './common/strategy/jwt.strategy';
 import { connectionOptions } from './config';
 import { NoticeModule } from './notice/notice.module';
 
@@ -24,6 +24,7 @@ import { NoticeModule } from './notice/notice.module';
   ],
   providers: [
     JwtStrategy,
+    AdminJwtStrategy,
     {
       provide: APP_FILTER,
       useClass: HttpErrorFilter,
