@@ -15,19 +15,19 @@ import { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
 import { basename } from 'path';
 import { FileNotFoundException } from 'src/common/exception/exception.index';
-import { JwtAuthGuard } from '../common/guard/jwt-auth.guard';
 import { MulterConfigs } from '../config/multer';
 import { NoticeFile } from './entity/notice-file.entity';
 import { NoticeService } from './notice.service';
-import mime, { getType } from 'mime';
+import { getType } from 'mime';
 import { decode, encode } from 'iconv-lite';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('notice')
 export class NoticeController {
   constructor(private noticeService: NoticeService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('admin-jwt'))
   @UseInterceptors(FileInterceptor('noticeFile', MulterConfigs))
   @Post('file/:notice_id')
   public async uploadFile(
@@ -50,7 +50,7 @@ export class NoticeController {
     @Res() res: Response,
   ): Promise<void> {
     const noticefilePath = await this.noticeService.downloadFile(id);
-    const filepath = `${process.cwd()}/upload/${noticefilePath}`;
+    const filepath = `${process.cwd()}/upload/noticeFile/${noticefilePath}`;
     const filename = basename(filepath);
     const mimetype = getType(filepath);
     console.log(filename, mimetype, filepath);
@@ -67,7 +67,7 @@ export class NoticeController {
     filestream.pipe(res);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('admin-jwt'))
   @UseInterceptors(FileInterceptor('noticeFile', MulterConfigs))
   @Put(':file_id')
   public async modifyFile(
@@ -77,6 +77,7 @@ export class NoticeController {
     return await this.noticeService.modifyFile(file.filename, id);
   }
 
+  @UseGuards(AuthGuard('admin-jwt'))
   @Delete(':file_id')
   public async deleteFile(@Param('file_id') id: number): Promise<DeleteResult> {
     return await this.noticeService.deleteFile(id);
