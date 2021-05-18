@@ -7,6 +7,7 @@ import { HttpErrorFilter } from './common/exception/exception.filter';
 import { AdminJwtStrategy, JwtStrategy } from './common/strategy/jwt.strategy';
 import { connectionOptions } from './config';
 import { NoticeModule } from './notice/notice.module';
+import { ReportModule } from './report/report.module';
 
 @Global()
 @Module({
@@ -21,6 +22,7 @@ import { NoticeModule } from './notice/notice.module';
     }),
     JwtModule.register({}),
     NoticeModule,
+    ReportModule,
   ],
   providers: [
     JwtStrategy,
