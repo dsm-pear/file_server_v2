@@ -3,4 +3,5 @@ export interface TokenPayload {
   sub: string;
   exp: Date;
   type: 'access' | 'refresh';
+  role: 'user' | 'admin';
 }
