@@ -1,9 +1,4 @@
-import {
-  GoneException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { GoneException, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { unauthorizedTokenException } from '../exception/exception.index';
