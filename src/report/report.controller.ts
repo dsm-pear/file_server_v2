@@ -7,8 +7,8 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { MulterConfigs } from 'src/config/multer';
 import { ReportFile } from './entity/report-file.entity';
 import { ReportService } from './report.service';
@@ -17,7 +17,7 @@ import { ReportService } from './report.service';
 export class ReportController {
   constructor(private reportService: ReportService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('reportFile', MulterConfigs))
   @Post('file/:report_id')
   public async uploadFile(
@@ -25,5 +25,13 @@ export class ReportController {
     @Param('report_id') id: number,
   ): Promise<ReportFile> {
     return await this.reportService.uploadFile(file.filename, id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('files/:report_id')
+  public async getReportFiles(
+    @Param('report_id') id: number,
+  ): Promise<ReportFile[]> {
+    return await this.reportService.getReportFiles(id);
   }
 }
