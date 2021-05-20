@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Res,
   UploadedFile,
   UseGuards,
@@ -58,10 +59,20 @@ export class ReportController {
     res.setHeader(
       'Content-disposition',
       'attachment; filename=' + decode(encode(filename, 'UTF-8'), 'ISO-8859-1'),
-    ),
-      res.setHeader('Content-type', mimetype);
+    );
+    res.setHeader('Content-type', mimetype);
 
     let filestream = createReadStream(filepath);
     filestream.pipe(res);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('reportFile', MulterConfigs))
+  @Put(':file_id')
+  public async modifyFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('file_id') id: number,
+  ): Promise<ReportFile> {
+    return await this.reportService.modifyFile(file.filename, id);
   }
 }
