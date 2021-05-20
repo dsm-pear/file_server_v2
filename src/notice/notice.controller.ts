@@ -50,10 +50,9 @@ export class NoticeController {
     @Res() res: Response,
   ): Promise<void> {
     const noticefilePath = await this.noticeService.downloadFile(id);
-    const filepath = `${process.cwd()}/upload/noticeFile/${noticefilePath}`;
+    const filepath = `${process.cwd()}/upload/noticeFiles/${noticefilePath}`;
     const filename = basename(filepath);
     const mimetype = getType(filepath);
-    console.log(filename, mimetype, filepath);
 
     if (!existsSync(filepath)) throw FileNotFoundException;
 
