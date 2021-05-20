@@ -7,8 +7,16 @@ export class ReportFileRepository extends Repository<ReportFile> {
     let newReportFile: ReportFile;
     newReportFile = this.create({
       path: filename,
-      report_id: id,
+      report: id,
     });
     return await this.save(newReportFile);
+  }
+
+  public async modifyFile(
+    filename: string,
+    reportFile: ReportFile,
+  ): Promise<ReportFile> {
+    reportFile.path = filename;
+    return await this.save(reportFile);
   }
 }
