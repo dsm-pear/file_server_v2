@@ -3,12 +3,19 @@ import {
   Get,
   Param,
   Post,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import { createReadStream, existsSync } from 'fs';
+import { encode, decode } from 'iconv-lite';
+import { getType } from 'mime';
+import { basename } from 'path';
+import { FileNotFoundException } from 'src/common/exception/exception.index';
 import { MulterConfigs } from 'src/config/multer';
 import { ReportFile } from './entity/report-file.entity';
 import { ReportService } from './report.service';
@@ -33,5 +40,28 @@ export class ReportController {
     @Param('report_id') id: number,
   ): Promise<ReportFile[]> {
     return await this.reportService.getReportFiles(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':file_id')
+  public async downloadFile(
+    @Param('file_id') id: number,
+    @Res() res: Response,
+  ): Promise<void> {
+    const reportfilePath = await this.reportService.downloadFile(id);
+    const filepath = `${process.cwd()}/upload/reportFiles/${reportfilePath}`;
+    const filename = basename(filepath);
+    const mimetype = getType(filepath);
+
+    if (!existsSync(filepath)) throw FileNotFoundException;
+
+    res.setHeader(
+      'Content-disposition',
+      'attachment; filename=' + decode(encode(filename, 'UTF-8'), 'ISO-8859-1'),
+    ),
+      res.setHeader('Content-type', mimetype);
+
+    let filestream = createReadStream(filepath);
+    filestream.pipe(res);
   }
 }
