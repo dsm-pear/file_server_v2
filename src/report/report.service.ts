@@ -21,4 +21,16 @@ export class ReportService {
 
     return reportFiles;
   }
+
+  public async downloadFile(id: number): Promise<string> {
+    const reportFile = await this.isExistFile(id);
+
+    return reportFile.path;
+  }
+
+  private async isExistFile(id: number): Promise<ReportFile> {
+    const reportFile = await this.reportRepository.findOne({ id });
+    if (!reportFile) throw FileNotFoundException;
+    return reportFile;
+  }
 }
