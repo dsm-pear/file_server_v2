@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -18,6 +19,7 @@ import { getType } from 'mime';
 import { basename } from 'path';
 import { FileNotFoundException } from 'src/common/exception/exception.index';
 import { MulterConfigs } from 'src/config/multer';
+import { DeleteResult } from 'typeorm';
 import { ReportFile } from './entity/report-file.entity';
 import { ReportService } from './report.service';
 
@@ -74,5 +76,11 @@ export class ReportController {
     @Param('file_id') id: number,
   ): Promise<ReportFile> {
     return await this.reportService.modifyFile(file.filename, id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(':file_id')
+  public async deleteFile(@Param('file_id') id: number): Promise<DeleteResult> {
+    return await this.reportService.deleteFile(id);
   }
 }
