@@ -1,3 +1,4 @@
+import { Member } from 'src/common/entity/member/member.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { ReportFile } from './report-file.entity';
 

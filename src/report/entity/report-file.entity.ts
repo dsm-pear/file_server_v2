@@ -5,7 +5,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Report } from '../../common/entity/report.entity';
+import { Report } from '../../common/entity/report/report.entity';
 
 @Entity('report_file_tbl')
 export class ReportFile {

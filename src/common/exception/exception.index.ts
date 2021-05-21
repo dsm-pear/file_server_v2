@@ -4,12 +4,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-export const unauthorizedTokenException = new UnauthorizedException(
+export const UnauthorizedTokenException = new UnauthorizedException(
   'Unauthorized Token',
 );
 
-export const adminForbiddenException = new ForbiddenException('Forbidden');
-export const userForbiddenException = new ForbiddenException(
+export const AdminForbiddenException = new ForbiddenException('Forbidden');
+export const UserForbiddenException = new ForbiddenException(
   'Not allowed to access file',
 );
 

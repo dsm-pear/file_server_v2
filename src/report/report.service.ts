@@ -6,7 +6,7 @@ import { ReportRepository } from 'src/common/entity/report/report.repository';
 import {
   FileNotFoundException,
   ReportNotFoundException,
-  userForbiddenException,
+  UserForbiddenException,
 } from 'src/common/exception/exception.index';
 import { ReportFile } from './entity/report-file.entity';
 import { ReportFileRepository } from './entity/report-file.repository';
@@ -49,7 +49,7 @@ export class ReportService {
     const reportFile = await this.isExistFile(id);
     const ownMember = await this.isOwnMember(id);
 
-    if (!ownMember) throw userForbiddenException;
+    if (!ownMember) throw UserForbiddenException;
     return await this.reportFileRepository.modifyFile(filename, reportFile);
   }
 
