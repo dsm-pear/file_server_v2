@@ -1,3 +1,4 @@
+import { Member } from 'src/common/entity/member/member.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { ReportFile } from './report-file.entity';
 
@@ -7,8 +8,16 @@ export class ReportFileRepository extends Repository<ReportFile> {
     let newReportFile: ReportFile;
     newReportFile = this.create({
       path: filename,
-      report_id: id,
+      report: id,
     });
     return await this.save(newReportFile);
+  }
+
+  public async modifyFile(
+    filename: string,
+    reportFile: ReportFile,
+  ): Promise<ReportFile> {
+    reportFile.path = filename;
+    return await this.save(reportFile);
   }
 }

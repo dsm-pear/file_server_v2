@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import {
-  adminForbiddenException,
-  unauthorizedTokenException,
+  AdminForbiddenException,
+  UnauthorizedTokenException,
 } from '../exception/exception.index';
 import { TokenPayload } from '../interface/payload.interface';
 
@@ -20,11 +20,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: TokenPayload): Promise<{ sub: string }> {
     if (payload.type !== 'access') {
-      throw unauthorizedTokenException;
+      throw UnauthorizedTokenException;
     }
 
     if (payload.role !== 'user') {
-      throw adminForbiddenException;
+      throw AdminForbiddenException;
     }
 
     return { sub: payload.sub };
@@ -43,11 +43,11 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
 
   async validate(payload: TokenPayload): Promise<{ sub: string }> {
     if (payload.type !== 'access') {
-      throw unauthorizedTokenException;
+      throw UnauthorizedTokenException;
     }
 
     if (payload.role == 'user') {
-      throw adminForbiddenException;
+      throw AdminForbiddenException;
     }
 
     return { sub: payload.sub };
