@@ -1,8 +1,13 @@
 import {
+  BadRequestException,
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+
+export const ReportFilesBadQueryException = new BadRequestException(
+  'Query Bad Request',
+);
 
 export const UnauthorizedTokenException = new UnauthorizedException(
   'Unauthorized Token',
