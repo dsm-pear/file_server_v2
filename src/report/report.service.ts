@@ -13,6 +13,7 @@ import { ReportFileRepository } from './entity/report-file.repository';
 import { MemberRepository } from '../common/entity/member/member.repository';
 import { REQUEST } from '@nestjs/core';
 import { IUserReqeust } from 'src/common/interface/IUserRequest';
+import { DeleteResult } from 'typeorm';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ReportService {
@@ -51,6 +52,14 @@ export class ReportService {
 
     if (!ownMember) throw UserForbiddenException;
     return await this.reportFileRepository.modifyFile(filename, reportFile);
+  }
+
+  public async deleteFile(id: number): Promise<DeleteResult> {
+    const reportFile = await this.isExistFile(id);
+    const ownMember = await this.isOwnMember(id);
+
+    if (!ownMember) throw UserForbiddenException;
+    return await this.reportFileRepository.delete(reportFile);
   }
 
   private async isExistFile(id: number): Promise<ReportFile> {

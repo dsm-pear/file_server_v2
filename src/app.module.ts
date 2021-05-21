@@ -8,6 +8,9 @@ import { AdminJwtStrategy, JwtStrategy } from './common/strategy/jwt.strategy';
 import { connectionOptions } from './config';
 import { NoticeModule } from './notice/notice.module';
 import { ReportModule } from './report/report.module';
+import { AppController } from './app/app.controller';
+import { AppService } from './app/app.service';
+import { ReportFileRepository } from './report/entity/report-file.repository';
 
 @Global()
 @Module({
@@ -20,6 +23,7 @@ import { ReportModule } from './report/report.module';
       useFactory: (config: ConfigService) => config.get(process.env.NODE_ENV),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([ReportFileRepository]),
     JwtModule.register({}),
     NoticeModule,
     ReportModule,
@@ -31,6 +35,8 @@ import { ReportModule } from './report/report.module';
       provide: APP_FILTER,
       useClass: HttpErrorFilter,
     },
+    AppService,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
