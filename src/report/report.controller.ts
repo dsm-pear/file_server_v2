@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UploadedFile,
   UseGuards,
@@ -45,12 +46,13 @@ export class ReportController {
     return await this.reportService.getReportFiles(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get(':file_id')
   public async downloadFile(
     @Param('file_id') id: number,
+    @Query('token') token: string,
     @Res() res: Response,
   ): Promise<void> {
+    await this.reportService.verifyTokenQuery(token);
     const reportfilePath = await this.reportService.downloadFile(id);
     const filepath = `${process.cwd()}/upload/reportFiles/${reportfilePath}`;
     const filename = basename(filepath);
