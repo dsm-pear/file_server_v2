@@ -17,6 +17,7 @@ import { ReportFileRepository } from './report/entity/report-file.repository';
   imports: [
     ConfigModule.forRoot({
       load: [connectionOptions],
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
