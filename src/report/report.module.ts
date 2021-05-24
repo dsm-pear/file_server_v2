@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberRepository } from 'src/common/entity/member/member.repository';
 import { ReportRepository } from 'src/common/entity/report/report.repository';

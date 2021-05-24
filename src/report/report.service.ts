@@ -6,6 +6,7 @@ import { ReportRepository } from 'src/common/entity/report/report.repository';
 import {
   FileNotFoundException,
   ReportNotFoundException,
+  TokenBadException,
   UserForbiddenException,
 } from 'src/common/exception/exception.index';
 import { ReportFile } from './entity/report-file.entity';
@@ -14,6 +15,8 @@ import { MemberRepository } from '../common/entity/member/member.repository';
 import { REQUEST } from '@nestjs/core';
 import { IUserReqeust } from 'src/common/interface/IUserRequest';
 import { DeleteResult } from 'typeorm';
+import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ReportService {
@@ -25,6 +28,7 @@ export class ReportService {
     @InjectRepository(Member)
     private readonly memberRepository: MemberRepository,
     @Inject(REQUEST) private request: IUserReqeust,
+    private readonly configService: ConfigService,
   ) {}
 
   public async uploadFile(filename: string, id: number): Promise<ReportFile> {
@@ -60,6 +64,17 @@ export class ReportService {
 
     if (!ownMember) throw UserForbiddenException;
     return await this.reportFileRepository.delete(reportFile);
+  }
+
+  public async verifyTokenQuery(token: string): Promise<void> {
+    if (!token) throw TokenBadException;
+    const splitToken = token.split(' ');
+    if (splitToken[0] !== 'Bearer') TokenBadException;
+    const payload: any = jwt.verify(
+      splitToken[1],
+      this.configService.get('JWT_SECRET'),
+    );
+    if (payload.type !== 'access') UserForbiddenException;
   }
 
   private async isExistFile(id: number): Promise<ReportFile> {
