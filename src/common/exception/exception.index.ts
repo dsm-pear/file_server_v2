@@ -8,6 +8,7 @@ import {
 export const ReportFilesBadQueryException = new BadRequestException(
   'Query Bad Request',
 );
+export const TokenBadException = new BadRequestException('Token Bad Request');
 
 export const UnauthorizedTokenException = new UnauthorizedException(
   'Unauthorized Token',
