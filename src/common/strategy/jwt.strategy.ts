@@ -23,10 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw UnauthorizedTokenException;
     }
 
-    if (payload.role !== 'user') {
-      throw AdminForbiddenException;
-    }
-
     return { sub: payload.sub };
   }
 }
