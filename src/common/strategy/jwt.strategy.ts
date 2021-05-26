@@ -19,8 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: TokenPayload): Promise<{ sub: string }> {
-    if (payload.type !== 'access') {
-      throw UnauthorizedTokenException;
+    if (!payload.id) {
+      if (payload.type !== 'access') {
+        throw UnauthorizedTokenException;
+      }
     }
 
     return { sub: payload.sub };
