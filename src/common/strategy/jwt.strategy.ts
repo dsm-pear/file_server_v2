@@ -37,15 +37,11 @@ export class AdminJwtStrategy extends PassportStrategy(Strategy, 'admin-jwt') {
     });
   }
 
-  async validate(payload: TokenPayload): Promise<{ sub: string }> {
-    if (payload.type !== 'access') {
-      throw UnauthorizedTokenException;
-    }
-
+  async validate(payload: TokenPayload): Promise<{ id: number }> {
     if (payload.role == 'user') {
       throw AdminForbiddenException;
     }
 
-    return { sub: payload.sub };
+    return { id: payload.id };
   }
 }

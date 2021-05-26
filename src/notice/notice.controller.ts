@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
 import { basename } from 'path';
-import { FileNotFoundException } from 'src/common/exception/exception.index';
+import { FileNotFoundException } from '../common/exception/exception.index';
 import { MulterConfigs } from '../config/multer';
 import { NoticeFile } from './entity/notice-file.entity';
 import { NoticeService } from './notice.service';
