@@ -82,7 +82,9 @@ export class ReportController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':file_id')
-  public async deleteFile(@Param('file_id') id: number): Promise<DeleteResult> {
+  public async deleteFile(
+    @Param('file_id') id: number,
+  ): Promise<{ report_id: number }> {
     return await this.reportService.deleteFile(id);
   }
 }

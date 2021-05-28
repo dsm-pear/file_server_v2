@@ -17,6 +17,7 @@ import { IUserReqeust } from 'src/common/interface/IUserRequest';
 import { DeleteResult } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { unlinkSync } from 'fs';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ReportService {
@@ -58,12 +59,17 @@ export class ReportService {
     return await this.reportFileRepository.modifyFile(filename, reportFile);
   }
 
-  public async deleteFile(id: number): Promise<DeleteResult> {
+  public async deleteFile(id: number): Promise<{ report_id: number }> {
     const reportFile = await this.isExistFile(id);
     const ownMember = await this.isOwnMember(id);
+    const report = await this.reportRepository.findReportByFileId(id);
 
     if (!ownMember) throw UserForbiddenException;
-    return await this.reportFileRepository.delete(reportFile);
+
+    unlinkSync(`${process.cwd()}/upload/reportFiles/${reportFile.path}`);
+    await this.reportFileRepository.delete(reportFile);
+
+    return { report_id: report.id };
   }
 
   public async verifyTokenQuery(token: string): Promise<void> {
