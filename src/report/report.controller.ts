@@ -19,6 +19,7 @@ import { encode, decode } from 'iconv-lite';
 import { getType } from 'mime';
 import { basename } from 'path';
 import { FileNotFoundException } from 'src/common/exception/exception.index';
+import { verifyTokenQuery } from 'src/common/function/verifyToken';
 import { MulterConfigs } from 'src/config/multer';
 import { DeleteResult } from 'typeorm';
 import { ReportFile } from './entity/report-file.entity';
@@ -52,7 +53,7 @@ export class ReportController {
     @Query('token') token: string,
     @Res() res: Response,
   ): Promise<void> {
-    await this.reportService.verifyTokenQuery(token);
+    await verifyTokenQuery(token);
     const reportfilePath = await this.reportService.downloadFile(id);
     const filepath = `${process.cwd()}/upload/reportFiles/${reportfilePath}`;
     const filename = basename(filepath);

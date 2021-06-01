@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import * as AdmZip from 'adm-zip';
 import { Response } from 'express';
 import { ReportFilesBadQueryException } from 'src/common/exception/exception.index';
+import { verifyTokenQuery } from 'src/common/function/verifyToken';
 import { ReportFile } from 'src/report/entity/report-file.entity';
 import { AppService } from './app.service';
 
@@ -10,12 +11,13 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private appService: AppService) {}
 
-  @UseGuards(AuthGuard('admin-jwt'))
   @Get('files')
   public async downloadZipFiles(
     @Query('report_id') report_id: number[],
+    @Query('token') token: string,
     @Res() res: Response,
   ): Promise<void> {
+    await verifyTokenQuery(token);
     let zip = new AdmZip();
     if (!Array.isArray(report_id)) throw ReportFilesBadQueryException;
 
